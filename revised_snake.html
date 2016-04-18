@@ -1,0 +1,92 @@
+<html>
+
+<head>
+    <title>Growing Snake Game</title>
+    <style>
+    canvas {
+        border: 1px solid black;
+    }
+    </style>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <button onclick="start()">Start</button>
+        <button id="right">Turn Right</button>
+        <button id="left">Turn Left</button>
+        <button onclick="stop()">Stop</button>
+    </div>
+    <canvas id="canvas" width="1000" height="750"></canvas>
+</body>
+<script>
+var ctx = document.getElementById('canvas').getContext('2d');
+var w = ctx.width;
+var h = ctx.height;
+var cw = 10;
+var direction;
+var line;
+
+function start() {
+    direction = "right";
+    drawLine();
+    setInterval(paint, 30);
+}
+
+function drawLine() {
+    var length = 1;
+    line = [];
+    for (var i = length - 1; i >= 0; i--) {
+        line.push({
+            x: i,
+            y: 30
+        });
+    }
+}
+
+function paint() {
+
+    var nx = line[0].x;
+    var ny = line[0].y;
+
+    if (direction == "right") nx++;
+    else if ( direction == "left") nx--;
+    else if (direction == "up") ny--;
+    else if (direction == "down") ny++;
+
+    var end = {
+        x: nx,
+        y: ny
+    };
+
+    line.unshift(end);
+
+    for (var i = 0; i < line.length; i++) {
+        var c = line[i];
+        paintLine(c.x, c.y);
+    }
+}
+
+function paintLine(x, y) {
+    ctx.fillStyle = 'red';
+    ctx.fillRect((x * cw)/5, (y * cw)/5, cw, cw);
+}
+
+$("button").click(function() {
+    var key = this.id;
+    if (key == "left" && direction == "right") direction = "up";
+    else if (key == "right" && direction == "right") direction = "down";
+    else if (key == "left" && direction == "left") direction = "down";
+    else if (key == "right" && direction == "left") direction = "up";
+    else if (key == "left" && direction == "up") direction = "left";
+    else if (key == "right" && direction == "up") direction = "right";
+    else if (key == "left" && direction == "down") direction = "right";
+    else if (key == "right" && direction == "down") direction = "left";
+});
+
+function stop() {
+    window.location.reload();
+}
+</script>
+
+</html>
